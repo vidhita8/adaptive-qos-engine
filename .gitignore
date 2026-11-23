@@ -1,0 +1,40 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / React
+node_modules/
+dist/
+build/
+coverage/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+
+# Logs and generated results
+*.log
+*.pid
+*.tmp
+experiments/results/
+experiments/reports/generated/
+
+# Local databases
+*.sqlite3
+*.db
+
+# Python packaging
+.eggs/
+wheels/
