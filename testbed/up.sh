@@ -303,6 +303,7 @@ configure_bottleneck() {
         parent "$MODEM_QDISC_CHILD_PARENT" \
         handle "$MODEM_QDISC_CHILD_HANDLE" \
         "$MODEM_QDISC_CHILD_KIND" \
+        limit "$MODEM_NETEM_LIMIT" \
         delay "$MODEM_DELAY" "$MODEM_JITTER" \
         loss "$MODEM_LOSS"
 }

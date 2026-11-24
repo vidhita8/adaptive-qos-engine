@@ -65,7 +65,7 @@ Configured values:
 | Netem delay | 10 ms |
 | Netem jitter | 2 ms |
 | Netem loss | 0% |
-| Netem packet limit | 1000 |
+| Netem packet limit | 2048 |
 
 The 3 MB TBF queue is deliberate. At 100 Mbps, it represents approximately 240 ms of queued data, making bufferbloat observable under load.
 
