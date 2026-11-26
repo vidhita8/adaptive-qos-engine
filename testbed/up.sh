@@ -25,7 +25,17 @@ for ns in $DEVICE_NAMESPACES $INFRA_NAMESPACES; do
     ip netns add "$ns"
     ip -n "$ns" link set lo up
 done
+# Create the router download IFB interface.
+# It must exist in both no-QoS and static-QoS configurations.
+echo "[CREATE] Router download IFB: $ROUTER_IFB"
 
+modprobe ifb
+
+ip -n qos-router link add \
+    name "$ROUTER_IFB" \
+    type ifb
+
+ip -n qos-router link set "$ROUTER_IFB" up
 # Create router LAN bridge
 echo "[CREATE] Router LAN bridge: $ROUTER_BRIDGE"
 

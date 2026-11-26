@@ -1,0 +1,98 @@
+schema_version: 1
+name: iso-download
+description: Large ISO download starts during a call while TVs stream and a game runs.
+seed: 20260101
+repetitions: 10
+warmup_s: 10
+duration_s: 120
+randomization: blocked
+
+configurations:
+  - name: no_qos
+    enabled: true
+  - name: static_qos
+    enabled: true
+  - name: adaptive
+    enabled: false
+    reason: not_implemented
+
+link:
+  up_mbps: 100
+  down_mbps: 100
+  delay_ms: 10
+  jitter_ms: 2
+  loss_pct: 0
+  events: []
+
+traffic:
+  - id: call
+    device: call
+    kind: udp_echo
+    port: 6001
+    pps: 50
+    payload_bytes: 160
+    start_s: -10
+    stop_s: 120
+
+  - id: game
+    device: game
+    kind: udp_echo
+    port: 6002
+    pps: 60
+    payload_bytes: 100
+    start_s: -10
+    stop_s: 120
+
+  - id: tv1
+    device: tv1
+    kind: http_chunks
+    port: 8080
+    chunk_bytes: 1000000
+    interval_s: 2
+    start_s: -10
+    stop_s: 120
+
+  - id: tv2
+    device: tv2
+    kind: http_chunks
+    port: 8080
+    chunk_bytes: 1000000
+    interval_s: 2
+    start_s: -10
+    stop_s: 120
+
+  - id: tv3
+    device: tv3
+    kind: http_chunks
+    port: 8080
+    chunk_bytes: 1000000
+    interval_s: 2
+    start_s: -10
+    stop_s: 120
+
+  - id: iso
+    device: bulk
+    kind: iperf3_tcp
+    port: 5201
+    direction: download
+    streams: 4
+    start_s: 30
+    stop_s: 120
+
+phases:
+  - name: baseline
+    from_s: 0
+    to_s: 30
+
+  - name: bulk_ramp
+    from_s: 30
+    to_s: 40
+
+  - name: bulk_steady
+    from_s: 40
+    to_s: 120
+
+validity:
+  max_host_cpu_pct: 90
+  min_samples_per_phase: 1000
+  expect_modem_rate_match: true

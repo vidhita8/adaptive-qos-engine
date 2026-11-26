@@ -20,10 +20,10 @@ def serve(port):
     while True:
         packet, address = sock.recvfrom(2048)
 
-        if len(packet) != REQUEST.size:
+        if len(packet) < REQUEST.size:
             continue
 
-        sequence, client_send_ns = REQUEST.unpack(packet)
+        sequence, client_send_ns = REQUEST.unpack_from(packet)
         server_receive_ns = time.monotonic_ns()
 
         server_send_ns = time.monotonic_ns()

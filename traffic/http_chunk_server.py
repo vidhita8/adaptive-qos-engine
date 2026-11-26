@@ -20,16 +20,19 @@ class ChunkHandler(BaseHTTPRequestHandler):
         params = parse_qs(parsed.query)
 
         try:
-            size_mb = float(params.get("size_mb", ["1"])[0])
-        except ValueError:
+            if "size_bytes" in params:
+                size_bytes = int(params["size_bytes"][0])
+            else:
+                size_mb = float(params.get("size_mb", ["1"])[0])
+                size_bytes = int(size_mb * 1024 * 1024)
+        except (ValueError, TypeError):
             self.send_error(400, "Invalid chunk size")
             return
 
-        if not 0 < size_mb <= 16:
-            self.send_error(400, "Chunk size must be between 0 and 16 MB")
+        if not 0 < size_bytes <= CHUNK_SIZE_LIMIT:
+            self.send_error(400, "Chunk size must be between 1 byte and 16 MB")
             return
 
-        size_bytes = int(size_mb * 1024 * 1024)
         block = b"\0" * (64 * 1024)
 
         self.send_response(200)

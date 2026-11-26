@@ -24,13 +24,52 @@ def main():
     )
     parser.add_argument("--rate", type=float, default=50.0)
     parser.add_argument("--duration", type=float, default=60.0)
+    parser.add_argument(
+        "--measurement-start-ns",
+        type=int,
+        default=None,
+        help="Shared monotonic timestamp marking experiment measurement time zero",
+    )
+    parser.add_argument(
+        "--start-s",
+        type=float,
+        default=0.0,
+        help="Flow start time relative to experiment measurement time zero",
+    )
+    parser.add_argument(
+        "--stop-s",
+        type=float,
+        default=None,
+        help="Flow stop time relative to experiment measurement time zero",
+    )
     parser.add_argument("--timeout", type=float, default=2.0)
+    parser.add_argument(
+        "--payload-bytes",
+        type=int,
+        default=REQUEST.size,
+        help="Total UDP application payload size, including the 16-byte header",
+    )
     parser.add_argument("--output", required=True)
 
     args = parser.parse_args()
 
-    if args.rate <= 0 or args.duration <= 0 or args.timeout <= 0:
-        parser.error("rate, duration and timeout must be positive")
+    stop_s = (
+        args.stop_s
+        if args.stop_s is not None
+        else args.start_s + args.duration
+    )
+
+    if (
+        args.rate <= 0
+        or args.timeout <= 0
+        or stop_s <= args.start_s
+        or args.payload_bytes < REQUEST.size
+        or args.payload_bytes > 1472
+    ):
+        parser.error(
+            "rate and timeout must be positive; stop-s must exceed start-s; "
+            f"payload-bytes must be between {REQUEST.size} and 1472"
+        )
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setblocking(False)
@@ -39,7 +78,8 @@ def main():
     output.parent.mkdir(parents=True, exist_ok=True)
 
     interval_ns = int(1_000_000_000 / args.rate)
-    total_packets = math.ceil(args.rate * args.duration)
+    duration_s = stop_s - args.start_s
+    total_packets = math.ceil(args.rate * duration_s)
 
     sent = {}
     received = {}
@@ -48,35 +88,43 @@ def main():
     jitter_ns = 0.0
     reordered_count = 0
 
-    start_ns = time.monotonic_ns()
-    next_send_ns = start_ns
-    final_deadline_ns = start_ns + int(
-        (args.duration + args.timeout) * 1e9
+    measurement_start_ns = (
+        args.measurement_start_ns
+        if args.measurement_start_ns is not None
+        else time.monotonic_ns()
     )
+
+    start_ns = measurement_start_ns + int(args.start_s * 1e9)
+    final_deadline_ns = (
+        measurement_start_ns
+        + int((stop_s + args.timeout) * 1e9)
+    )
+
+    next_sequence = 0
+    next_send_ns = start_ns
 
     while time.monotonic_ns() < final_deadline_ns:
         now_ns = time.monotonic_ns()
 
-        # Send one packet when its scheduled time arrives.
-        if len(sent) < total_packets and now_ns >= next_send_ns:
-            sequence = len(sent)
+        if next_sequence < total_packets and now_ns >= next_send_ns:
+            sequence = next_sequence
             send_ns = time.monotonic_ns()
 
+            payload = REQUEST.pack(sequence, send_ns)
+            payload += bytes(args.payload_bytes - REQUEST.size)
+
             try:
-                sock.sendto(
-                    REQUEST.pack(sequence, send_ns),
-                    (args.server, args.port),
-                )
+                sock.sendto(payload, (args.server, args.port))
                 sent[sequence] = send_ns
             except OSError:
                 pass
 
-            next_send_ns = start_ns + (sequence + 1) * interval_ns
+            next_sequence += 1
+            next_send_ns = start_ns + next_sequence * interval_ns
 
-        # Wait for replies without interrupting packet pacing.
         now_ns = time.monotonic_ns()
 
-        if len(sent) < total_packets:
+        if next_sequence < total_packets:
             wait_ns = max(0, next_send_ns - now_ns)
         else:
             wait_ns = max(0, final_deadline_ns - now_ns)
@@ -119,7 +167,6 @@ def main():
             reverse_ms = (receive_ns - server_send) / 1e6
             rtt_ms = (receive_ns - echoed_send) / 1e6
 
-            # Inter-arrival jitter using sender-to-receiver transit variation.
             transit_ns = receive_ns - echoed_send
 
             if previous_transit is not None:
@@ -141,12 +188,12 @@ def main():
 
     sock.close()
 
-    # Write every sent packet, including packets that were lost.
     with output.open("w", newline="") as file:
         writer = csv.writer(file)
 
         writer.writerow([
             "sequence",
+            "measurement_seconds",
             "client_send_ns",
             "server_receive_ns",
             "server_send_ns",
@@ -160,17 +207,23 @@ def main():
         ])
 
         for sequence in sorted(sent):
+            measurement_seconds = round(
+                (sent[sequence] - measurement_start_ns) / 1e9,
+                6,
+            )
             result = received.get(sequence)
 
             if result is None:
                 writer.writerow([
                     sequence,
+                    measurement_seconds,
                     sent[sequence],
                     "", "", "", "", "", "", "", "", 1
                 ])
             else:
                 writer.writerow([
                     sequence,
+                    measurement_seconds,
                     sent[sequence],
                     result["server_receive_ns"],
                     result["server_send_ns"],
@@ -185,6 +238,8 @@ def main():
 
     lost = len(sent) - len(received)
 
+    print(f"Payload:    {args.payload_bytes} bytes")
+    print(f"Scheduled:  {total_packets}")
     print(f"Sent:       {len(sent)}")
     print(f"Received:   {len(received)}")
     print(f"Lost:       {lost}")
