@@ -1,0 +1,90 @@
+{
+  "generator_config_id": "cfg-08-single-and-many-100m",
+  "seed": 108008,
+  "modem_rate": "100mbit",
+  "flows": [
+    {
+      "stream_id": "call-8",
+      "device_id": "call",
+      "protocol": "udp",
+      "server_port": 43222,
+      "label": "interactive"
+    },
+    {
+      "stream_id": "laptop-call",
+      "device_id": "laptop",
+      "protocol": "udp",
+      "server_port": 44403,
+      "label": "interactive"
+    },
+    {
+      "stream_id": "game-8",
+      "device_id": "game",
+      "protocol": "udp",
+      "server_port": 55348,
+      "label": "gaming"
+    },
+    {
+      "stream_id": "laptop-game",
+      "device_id": "laptop",
+      "protocol": "udp",
+      "server_port": 30725,
+      "label": "gaming"
+    },
+    {
+      "stream_id": "tv1-stream",
+      "device_id": "tv1",
+      "protocol": "tcp",
+      "server_port": 34600,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv2-stream",
+      "device_id": "tv2",
+      "protocol": "tcp",
+      "server_port": 39138,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv3-stream",
+      "device_id": "tv3",
+      "protocol": "tcp",
+      "server_port": 58562,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "laptop-stream",
+      "device_id": "laptop",
+      "protocol": "tcp",
+      "server_port": 39516,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "bulk-single",
+      "device_id": "bulk",
+      "protocol": "tcp",
+      "server_port": 31257,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    },
+    {
+      "stream_id": "bulk-many-down",
+      "device_id": "bulk",
+      "protocol": "tcp",
+      "server_port": 32900,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    },
+    {
+      "stream_id": "laptop-up",
+      "device_id": "laptop",
+      "protocol": "tcp",
+      "server_port": 59047,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    }
+  ]
+}

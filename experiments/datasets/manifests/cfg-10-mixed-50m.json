@@ -1,0 +1,67 @@
+{
+  "generator_config_id": "cfg-10-mixed-50m",
+  "seed": 110010,
+  "modem_rate": "50mbit",
+  "flows": [
+    {
+      "stream_id": "call-supplement",
+      "device_id": "call",
+      "protocol": "udp",
+      "server_port": 44994,
+      "label": "interactive"
+    },
+    {
+      "stream_id": "game-supplement",
+      "device_id": "game",
+      "protocol": "udp",
+      "server_port": 40978,
+      "label": "gaming"
+    },
+    {
+      "stream_id": "tv1-stream-supplement",
+      "device_id": "tv1",
+      "protocol": "tcp",
+      "server_port": 55137,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv2-stream-supplement",
+      "device_id": "tv2",
+      "protocol": "tcp",
+      "server_port": 57950,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv3-stream-supplement",
+      "device_id": "tv3",
+      "protocol": "tcp",
+      "server_port": 43661,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "laptop-stream-supplement",
+      "device_id": "laptop",
+      "protocol": "tcp",
+      "server_port": 30039,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "bulk-up-supplement",
+      "device_id": "bulk",
+      "protocol": "tcp",
+      "server_port": 36210,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    },
+    {
+      "stream_id": "tv2-down-supplement",
+      "device_id": "tv2",
+      "protocol": "tcp",
+      "server_port": 49034,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    }
+  ]
+}

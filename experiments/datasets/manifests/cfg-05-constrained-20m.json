@@ -1,0 +1,67 @@
+{
+  "generator_config_id": "cfg-05-constrained-20m",
+  "seed": 105005,
+  "modem_rate": "20mbit",
+  "flows": [
+    {
+      "stream_id": "call-5",
+      "device_id": "call",
+      "protocol": "udp",
+      "server_port": 52045,
+      "label": "interactive"
+    },
+    {
+      "stream_id": "laptop-call",
+      "device_id": "laptop",
+      "protocol": "udp",
+      "server_port": 53823,
+      "label": "interactive"
+    },
+    {
+      "stream_id": "game-5",
+      "device_id": "game",
+      "protocol": "udp",
+      "server_port": 48837,
+      "label": "gaming"
+    },
+    {
+      "stream_id": "tv1-stream",
+      "device_id": "tv1",
+      "protocol": "tcp",
+      "server_port": 48981,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv2-stream",
+      "device_id": "tv2",
+      "protocol": "tcp",
+      "server_port": 46181,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "laptop-stream",
+      "device_id": "laptop",
+      "protocol": "tcp",
+      "server_port": 44392,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "bulk-up",
+      "device_id": "bulk",
+      "protocol": "tcp",
+      "server_port": 35205,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    },
+    {
+      "stream_id": "laptop-down",
+      "device_id": "laptop",
+      "protocol": "tcp",
+      "server_port": 39882,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    }
+  ]
+}

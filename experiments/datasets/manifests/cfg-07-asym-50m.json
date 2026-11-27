@@ -1,0 +1,60 @@
+{
+  "generator_config_id": "cfg-07-asym-50m",
+  "seed": 107007,
+  "modem_rate": "50mbit",
+  "flows": [
+    {
+      "stream_id": "call-7",
+      "device_id": "call",
+      "protocol": "udp",
+      "server_port": 36530,
+      "label": "interactive"
+    },
+    {
+      "stream_id": "game-7",
+      "device_id": "game",
+      "protocol": "udp",
+      "server_port": 32427,
+      "label": "gaming"
+    },
+    {
+      "stream_id": "tv1-stream",
+      "device_id": "tv1",
+      "protocol": "tcp",
+      "server_port": 59169,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv2-stream",
+      "device_id": "tv2",
+      "protocol": "tcp",
+      "server_port": 56364,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv3-stream",
+      "device_id": "tv3",
+      "protocol": "tcp",
+      "server_port": 52717,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "bulk-up",
+      "device_id": "bulk",
+      "protocol": "tcp",
+      "server_port": 38826,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    },
+    {
+      "stream_id": "laptop-down",
+      "device_id": "laptop",
+      "protocol": "tcp",
+      "server_port": 53965,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    }
+  ]
+}

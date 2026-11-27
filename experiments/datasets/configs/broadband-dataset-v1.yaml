@@ -1,0 +1,959 @@
+schema_version: 1
+name: broadband-dataset-v1
+description: >
+  Multi-seed mixed broadband dataset across interactive, gaming, streaming, and bulk
+  traffic classes, all 7 devices, varied modem rates, and concurrent laptop mixed traffic.
+idle_timeout_s: 5.0
+port_range:
+  min_port: 30000
+  max_port: 59999
+
+configs:
+  - config_id: cfg-01-home-mix-100m
+    seed: 101001
+    description: 100 Mbps home baseline with regular calls, bursty gaming, 3 TVs, upload bulk, and mixed laptop
+    modem_rate: 100mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-1
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 50
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 140
+        max_payload_bytes: 180
+      - id: laptop-call
+        device_id: laptop
+        label: interactive
+        kind: udp_dataset
+        rate: 35
+        duration_s: 1.8
+        sessions: 20
+        rounds: 9
+        pattern: regular
+        min_payload_bytes: 100
+        max_payload_bytes: 160
+      - id: game-1
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 60
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: bursty
+        burst_size: 4
+        intra_burst_gap_ms: 2.0
+        min_payload_bytes: 64
+        max_payload_bytes: 180
+      - id: laptop-game
+        device_id: laptop
+        label: gaming
+        kind: udp_dataset
+        rate: 45
+        duration_s: 1.8
+        sessions: 20
+        rounds: 9
+        pattern: bursty
+        burst_size: 3
+        intra_burst_gap_ms: 3.0
+        min_payload_bytes: 56
+        max_payload_bytes: 150
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 120000
+        max_chunk_bytes: 320000
+        min_interval_s: 0.20
+        max_interval_s: 0.36
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 150000
+        max_chunk_bytes: 400000
+        min_interval_s: 0.22
+        max_interval_s: 0.40
+      - id: tv3-stream
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 100000
+        max_chunk_bytes: 280000
+        min_interval_s: 0.18
+        max_interval_s: 0.34
+      - id: laptop-stream
+        device_id: laptop
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 90000
+        max_chunk_bytes: 240000
+        min_interval_s: 0.20
+        max_interval_s: 0.35
+      - id: bulk-up
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 8
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 6M
+        gap_s: 0.05
+      - id: laptop-down
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 6
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 6M
+        gap_s: 0.05
+
+  - config_id: cfg-02-unpaced-100m
+    seed: 102002
+    description: 100 Mbps unpaced bulk competition with varied UDP rates and streaming chunks
+    modem_rate: 100mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-2
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 30
+        duration_s: 1.8
+        sessions: 30
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 80
+        max_payload_bytes: 140
+      - id: game-2
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 75
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: bursty
+        burst_size: 5
+        intra_burst_gap_ms: 1.5
+        min_payload_bytes: 72
+        max_payload_bytes: 240
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 160000
+        max_chunk_bytes: 450000
+        min_interval_s: 0.22
+        max_interval_s: 0.38
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 110000
+        max_chunk_bytes: 300000
+        min_interval_s: 0.18
+        max_interval_s: 0.34
+      - id: tv3-stream
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 200000
+        max_chunk_bytes: 500000
+        min_interval_s: 0.24
+        max_interval_s: 0.42
+      - id: bulk-down
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 10
+        rounds: 22
+        round_duration_s: 1
+        gap_s: 0.05
+      - id: laptop-up
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 6
+        rounds: 20
+        round_duration_s: 1
+        bitrate: 5M
+        gap_s: 0.05
+
+  - config_id: cfg-03-midrate-50m
+    seed: 103003
+    description: 50 Mbps broadband profile with mixed laptop interactive/streaming/bulk
+    modem_rate: 50mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-3
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 40
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 160
+        max_payload_bytes: 220
+      - id: laptop-call
+        device_id: laptop
+        label: interactive
+        kind: udp_dataset
+        rate: 25
+        duration_s: 1.8
+        sessions: 20
+        rounds: 8
+        pattern: regular
+        min_payload_bytes: 120
+        max_payload_bytes: 180
+      - id: game-3
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 50
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: bursty
+        burst_size: 4
+        intra_burst_gap_ms: 2.5
+        min_payload_bytes: 48
+        max_payload_bytes: 160
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 80000
+        max_chunk_bytes: 220000
+        min_interval_s: 0.18
+        max_interval_s: 0.34
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 100000
+        max_chunk_bytes: 260000
+        min_interval_s: 0.20
+        max_interval_s: 0.36
+      - id: laptop-stream
+        device_id: laptop
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 70000
+        max_chunk_bytes: 190000
+        min_interval_s: 0.18
+        max_interval_s: 0.32
+      - id: bulk-up
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 6
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 4M
+        gap_s: 0.05
+      - id: laptop-down
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 4
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 5M
+        gap_s: 0.05
+
+  - config_id: cfg-04-parallel-100m
+    seed: 104004
+    description: 100 Mbps high-parallel bulk + multi-session interactive/gaming/streaming
+    modem_rate: 100mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-4
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 60
+        duration_s: 1.6
+        sessions: 30
+        rounds: 11
+        pattern: regular
+        min_payload_bytes: 160
+        max_payload_bytes: 160
+      - id: game-4
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 80
+        duration_s: 1.6
+        sessions: 30
+        rounds: 11
+        pattern: bursty
+        burst_size: 6
+        intra_burst_gap_ms: 1.5
+        min_payload_bytes: 60
+        max_payload_bytes: 220
+      - id: laptop-game
+        device_id: laptop
+        label: gaming
+        kind: udp_dataset
+        rate: 40
+        duration_s: 1.6
+        sessions: 20
+        rounds: 9
+        pattern: bursty
+        burst_size: 3
+        intra_burst_gap_ms: 4.0
+        min_payload_bytes: 80
+        max_payload_bytes: 200
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 140000
+        max_chunk_bytes: 360000
+        min_interval_s: 0.20
+        max_interval_s: 0.36
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 140000
+        max_chunk_bytes: 360000
+        min_interval_s: 0.20
+        max_interval_s: 0.36
+      - id: tv3-stream
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 90000
+        max_chunk_bytes: 240000
+        min_interval_s: 0.18
+        max_interval_s: 0.32
+      - id: bulk-up
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 12
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 5M
+        gap_s: 0.05
+      - id: laptop-down
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 8
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 5M
+        gap_s: 0.05
+
+  - config_id: cfg-05-constrained-20m
+    seed: 105005
+    description: 20 Mbps constrained broadband link with unpaced bulk and smaller streaming chunks
+    modem_rate: 20mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-5
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 25
+        duration_s: 2.0
+        sessions: 25
+        rounds: 9
+        pattern: regular
+        min_payload_bytes: 90
+        max_payload_bytes: 150
+      - id: laptop-call
+        device_id: laptop
+        label: interactive
+        kind: udp_dataset
+        rate: 30
+        duration_s: 2.0
+        sessions: 20
+        rounds: 8
+        pattern: regular
+        min_payload_bytes: 110
+        max_payload_bytes: 190
+      - id: game-5
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 35
+        duration_s: 2.0
+        sessions: 25
+        rounds: 9
+        pattern: bursty
+        burst_size: 3
+        intra_burst_gap_ms: 3.0
+        min_payload_bytes: 50
+        max_payload_bytes: 140
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 60000
+        max_chunk_bytes: 140000
+        min_interval_s: 0.25
+        max_interval_s: 0.45
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 60000
+        max_chunk_bytes: 140000
+        min_interval_s: 0.25
+        max_interval_s: 0.45
+      - id: laptop-stream
+        device_id: laptop
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 50000
+        max_chunk_bytes: 120000
+        min_interval_s: 0.22
+        max_interval_s: 0.40
+      - id: bulk-up
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 2
+        rounds: 14
+        round_duration_s: 2
+        gap_s: 0.05
+      - id: laptop-down
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 4
+        rounds: 18
+        round_duration_s: 1
+        gap_s: 0.05
+
+  - config_id: cfg-06-laptop-mixed-100m
+    seed: 106006
+    description: 100 Mbps laptop-heavy concurrent interactive, gaming, streaming, and bulk
+    modem_rate: 100mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-6
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 45
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 130
+        max_payload_bytes: 210
+      - id: laptop-call
+        device_id: laptop
+        label: interactive
+        kind: udp_dataset
+        rate: 50
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 140
+        max_payload_bytes: 180
+      - id: game-6
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 65
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: bursty
+        burst_size: 5
+        intra_burst_gap_ms: 2.0
+        min_payload_bytes: 80
+        max_payload_bytes: 260
+      - id: laptop-game
+        device_id: laptop
+        label: gaming
+        kind: udp_dataset
+        rate: 55
+        duration_s: 1.8
+        sessions: 20
+        rounds: 10
+        pattern: bursty
+        burst_size: 4
+        intra_burst_gap_ms: 2.5
+        min_payload_bytes: 64
+        max_payload_bytes: 170
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 150000
+        max_chunk_bytes: 420000
+        min_interval_s: 0.22
+        max_interval_s: 0.38
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 120000
+        max_chunk_bytes: 340000
+        min_interval_s: 0.20
+        max_interval_s: 0.36
+      - id: tv3-stream
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 180000
+        max_chunk_bytes: 480000
+        min_interval_s: 0.24
+        max_interval_s: 0.42
+      - id: laptop-stream
+        device_id: laptop
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 100000
+        max_chunk_bytes: 280000
+        min_interval_s: 0.18
+        max_interval_s: 0.34
+      - id: bulk-down
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 8
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 6M
+        gap_s: 0.05
+      - id: laptop-up
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 10
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 5M
+        gap_s: 0.05
+
+  - config_id: cfg-07-asym-50m
+    seed: 107007
+    description: 50 Mbps asymmetric streaming and multi-stream bulk mix
+    modem_rate: 50mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-7
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 55
+        duration_s: 1.6
+        sessions: 25
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 120
+        max_payload_bytes: 240
+      - id: game-7
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 70
+        duration_s: 1.6
+        sessions: 30
+        rounds: 10
+        pattern: bursty
+        burst_size: 4
+        intra_burst_gap_ms: 2.0
+        min_payload_bytes: 70
+        max_payload_bytes: 210
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 90000
+        max_chunk_bytes: 240000
+        min_interval_s: 0.18
+        max_interval_s: 0.34
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 110000
+        max_chunk_bytes: 280000
+        min_interval_s: 0.20
+        max_interval_s: 0.36
+      - id: tv3-stream
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 130000
+        max_chunk_bytes: 320000
+        min_interval_s: 0.22
+        max_interval_s: 0.38
+      - id: bulk-up
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 10
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 3M
+        gap_s: 0.05
+      - id: laptop-down
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 8
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 4M
+        gap_s: 0.05
+
+  - config_id: cfg-08-single-and-many-100m
+    seed: 108008
+    description: 100 Mbps mix with single-stream and 12-stream bulk plus varied UDP/HTTP
+    modem_rate: 100mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-8
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 35
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 150
+        max_payload_bytes: 200
+      - id: laptop-call
+        device_id: laptop
+        label: interactive
+        kind: udp_dataset
+        rate: 45
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: regular
+        min_payload_bytes: 100
+        max_payload_bytes: 150
+      - id: game-8
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 50
+        duration_s: 1.8
+        sessions: 25
+        rounds: 10
+        pattern: bursty
+        burst_size: 5
+        intra_burst_gap_ms: 2.5
+        min_payload_bytes: 90
+        max_payload_bytes: 280
+      - id: laptop-game
+        device_id: laptop
+        label: gaming
+        kind: udp_dataset
+        rate: 60
+        duration_s: 1.8
+        sessions: 20
+        rounds: 9
+        pattern: bursty
+        burst_size: 4
+        intra_burst_gap_ms: 2.0
+        min_payload_bytes: 52
+        max_payload_bytes: 140
+      - id: tv1-stream
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 130000
+        max_chunk_bytes: 350000
+        min_interval_s: 0.20
+        max_interval_s: 0.36
+      - id: tv2-stream
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 160000
+        max_chunk_bytes: 420000
+        min_interval_s: 0.22
+        max_interval_s: 0.38
+      - id: tv3-stream
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 100000
+        max_chunk_bytes: 280000
+        min_interval_s: 0.18
+        max_interval_s: 0.34
+      - id: laptop-stream
+        device_id: laptop
+        label: streaming
+        kind: http_chunks
+        duration_s: 28.0
+        min_chunk_bytes: 120000
+        max_chunk_bytes: 300000
+        min_interval_s: 0.20
+        max_interval_s: 0.35
+      - id: bulk-single
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 1
+        rounds: 20
+        round_duration_s: 1
+        bitrate: 15M
+        gap_s: 0.05
+      - id: bulk-many-down
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 12
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 5M
+        gap_s: 0.05
+      - id: laptop-up
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 8
+        rounds: 22
+        round_duration_s: 1
+        bitrate: 5M
+        gap_s: 0.05
+
+  - config_id: cfg-09-streaming-heavy-100m
+    seed: 109009
+    description: 100 Mbps streaming-heavy mixed workload with four concurrent HTTP clients, varied UDP sessions, and parallel bulk transfers
+    modem_rate: 100mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-supplement
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 45
+        duration_s: 1.8
+        sessions: 25
+        rounds: 12
+        pattern: regular
+        min_payload_bytes: 100
+        max_payload_bytes: 180
+
+      - id: game-supplement
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 65
+        duration_s: 1.8
+        sessions: 30
+        rounds: 12
+        pattern: bursty
+        burst_size: 4
+        intra_burst_gap_ms: 2.0
+        min_payload_bytes: 56
+        max_payload_bytes: 200
+
+      - id: tv1-stream-supplement
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 100000
+        max_chunk_bytes: 260000
+        min_interval_s: 0.16
+        max_interval_s: 0.25
+
+      - id: tv2-stream-supplement
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 120000
+        max_chunk_bytes: 300000
+        min_interval_s: 0.17
+        max_interval_s: 0.27
+
+      - id: tv3-stream-supplement
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 80000
+        max_chunk_bytes: 220000
+        min_interval_s: 0.15
+        max_interval_s: 0.24
+
+      - id: laptop-stream-supplement
+        device_id: laptop
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 90000
+        max_chunk_bytes: 240000
+        min_interval_s: 0.18
+        max_interval_s: 0.28
+
+      - id: bulk-up-supplement
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 8
+        rounds: 24
+        round_duration_s: 1
+        gap_s: 0.05
+
+      - id: laptop-down-supplement
+        device_id: laptop
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 6
+        rounds: 24
+        round_duration_s: 1
+        gap_s: 0.05
+
+  - config_id: cfg-10-mixed-50m
+    seed: 110010
+    description: 50 Mbps mixed broadband workload with four concurrent HTTP clients, bursty gaming, interactive calls, and bidirectional bulk transfers
+    modem_rate: 50mbit
+    capture_duration_s: 42.0
+    streams:
+      - id: call-supplement
+        device_id: call
+        label: interactive
+        kind: udp_dataset
+        rate: 55
+        duration_s: 1.8
+        sessions: 25
+        rounds: 12
+        pattern: regular
+        min_payload_bytes: 120
+        max_payload_bytes: 200
+
+      - id: game-supplement
+        device_id: game
+        label: gaming
+        kind: udp_dataset
+        rate: 75
+        duration_s: 1.8
+        sessions: 30
+        rounds: 12
+        pattern: bursty
+        burst_size: 5
+        intra_burst_gap_ms: 2.0
+        min_payload_bytes: 48
+        max_payload_bytes: 220
+
+      - id: tv1-stream-supplement
+        device_id: tv1
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 80000
+        max_chunk_bytes: 200000
+        min_interval_s: 0.18
+        max_interval_s: 0.28
+
+      - id: tv2-stream-supplement
+        device_id: tv2
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 100000
+        max_chunk_bytes: 240000
+        min_interval_s: 0.20
+        max_interval_s: 0.30
+
+      - id: tv3-stream-supplement
+        device_id: tv3
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 70000
+        max_chunk_bytes: 180000
+        min_interval_s: 0.17
+        max_interval_s: 0.27
+
+      - id: laptop-stream-supplement
+        device_id: laptop
+        label: streaming
+        kind: http_chunks
+        duration_s: 32.0
+        min_chunk_bytes: 80000
+        max_chunk_bytes: 220000
+        min_interval_s: 0.19
+        max_interval_s: 0.29
+
+      - id: bulk-up-supplement
+        device_id: bulk
+        label: bulk
+        kind: iperf3_tcp
+        direction: upload
+        streams: 8
+        rounds: 24
+        round_duration_s: 1
+        gap_s: 0.05
+
+      - id: tv2-down-supplement
+        device_id: tv2
+        label: bulk
+        kind: iperf3_tcp
+        direction: download
+        streams: 6
+        rounds: 24
+        round_duration_s: 1
+        gap_s: 0.05

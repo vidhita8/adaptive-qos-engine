@@ -30,6 +30,8 @@ coverage/
 *.tmp
 experiments/results/
 experiments/reports/generated/
+experiments/datasets/generated/
+experiments/datasets/*.csv
 
 # Local databases
 *.sqlite3

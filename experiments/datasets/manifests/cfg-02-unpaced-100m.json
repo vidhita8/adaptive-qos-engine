@@ -1,0 +1,60 @@
+{
+  "generator_config_id": "cfg-02-unpaced-100m",
+  "seed": 102002,
+  "modem_rate": "100mbit",
+  "flows": [
+    {
+      "stream_id": "call-2",
+      "device_id": "call",
+      "protocol": "udp",
+      "server_port": 50111,
+      "label": "interactive"
+    },
+    {
+      "stream_id": "game-2",
+      "device_id": "game",
+      "protocol": "udp",
+      "server_port": 54976,
+      "label": "gaming"
+    },
+    {
+      "stream_id": "tv1-stream",
+      "device_id": "tv1",
+      "protocol": "tcp",
+      "server_port": 53747,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv2-stream",
+      "device_id": "tv2",
+      "protocol": "tcp",
+      "server_port": 46056,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "tv3-stream",
+      "device_id": "tv3",
+      "protocol": "tcp",
+      "server_port": 35864,
+      "label": "streaming"
+    },
+    {
+      "stream_id": "bulk-down",
+      "device_id": "bulk",
+      "protocol": "tcp",
+      "server_port": 43741,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    },
+    {
+      "stream_id": "laptop-up",
+      "device_id": "laptop",
+      "protocol": "tcp",
+      "server_port": 52365,
+      "label": "bulk",
+      "min_packets": 40,
+      "min_bytes": 32768
+    }
+  ]
+}
